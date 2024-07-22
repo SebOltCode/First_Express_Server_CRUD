@@ -33,11 +33,25 @@ export const updatePost = (req, res) => {
   res.status = (200).json;  ({ message: 'Post updated' }); 
 };
 
-export const deletePost = (req, res) => {
-  const id = getResourceId(req.url);
-  console.log('Here we have access to the ID: ', id);
-  res.status = (200).json; ({ message: 'Post deleted' });
- };
+export const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const client = new Client({ connectionString: 'yourconnectionstring'});
+    await client.connect();
+    const queryCheckExistence = 'SELECT EXISTS(SELECT 1 FROM posts WHERE id = $1)';
+    const checkExistenceResult = await client.query(queryCheckExistence, [id]);
+    if (!checkExistenceResult.rows[0].exists) {
+      returnErrorWithMessage(res, 404, 'Post not found');
+    } else {
+      const deleteQuery = 'DELETE FROM posts WHERE id = $1';
+      await client.query(deleteQuery, [id]);
+      res.status(200).json({ message: 'Post deleted' });
+    }
+  } catch (error) {
+    console.error('Error deleting post: ', error);
+    returnErrorWithMessage(res, 500, 'An error occurred deleting the post');
+  }
+};
  export const getPostById = async (req, res) => {
   try {
     const { id } = req.params;

@@ -1,46 +1,45 @@
 /**
- * Sends an error response with a specified status code and message.
- *
+ * Returns an error response with a given message.
  * @param {Object} res - The response object.
- * @param {number} code - The status code of the response. Defaults to 500 if not provided.
- * @param {string} message - The error message to be sent. Defaults to 'Internal Server Error' if not provided.
+ * @param {number} code - The HTTP status code.
+ * @param {string} message - The error message.
  * @returns {void}
- * @example returnErrorWithMessage(res, 404, 'Resource Not Found');
+ * @example
  */
+ 
 export const returnErrorWithMessage = (res, code, message) => {
   res.statusCode = code || 500;
   res.setHeader('Content-Type', 'application/json');
   return res.end(JSON.stringify({ message: message || 'Internal Server Error' }));
 };
-
 /**
- * Processes the body from a request object.
- *
+ * Processes the body from an HTTP request.
  * @param {http.IncomingMessage} req - The request object.
- * @returns {Promise<string>} A promise that resolves with the body of the request.
+ * @returns {Promise<string>} - The body of the request as a string.
  */
-export const processBodyFromRequest = req =>
-  new Promise((resolve, reject) => {
-    let body = '';
-    req.on('data', chunk => (body += chunk.toString()));
-    req.on('end', () => resolve(body));
-    req.on('error', reject);
-  });
+ 
+  export const processBodyFromRequest = (req) =>
+    new Promise((resolve, reject) => {
+      let body = '';
+      req.on('data', chunk => (body += chunk.toString()));
+      req.on('end', () => resolve(body));
+      req.on('error', reject);
+    });
 
-/**
- * Creates a regular expression pattern for a given resource.
- *
- * @param {string} resource - The resource to create the regular expression for.
- * @returns {RegExp} - The regular expression pattern.
+
+ /**
+ * Creates a RegExp for matching resource URLs.
+ * @param {string} resource - The resource name.
+ * @returns {RegExp} - The RegExp for matching resource URLs.
  * @example regex('/posts') => /^\/posts\/[a-zA-Z0-9]+$/
  */
+ 
 export const regex = resource => new RegExp(`^${resource}\/[a-zA-Z0-9]+$`);
 
 /**
- * Get the resource ID from the given URL.
- *
- * @param {string} url - The URL from which to extract the resource ID.
- * @returns {string} The extracted resource ID.
+ * Extracts the resource ID from a URL.
+ * @param {string} url - The URL from which to extract the ID.
+ * @returns {string} - The extracted resource ID.
  * @example getResourceId('/posts/123') => '123'
  */
 export const getResourceId = url => url.split('/')[2];

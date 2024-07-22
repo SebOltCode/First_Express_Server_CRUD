@@ -3,6 +3,7 @@ import pg from 'pg';
 const { Client } = pg;
 import { getResourceId, returnErrorWithMessage } from './utils.js';
 
+const connectionString = 'postgresql://fullstackdb_owner:ReM6LhxYsAF3@ep-polished-flower-a2i8tt6c.eu-central-1.aws.neon.tech/fullstackdb?sslmode=require';
 
 export const createPost = async (req, res) => {
   try {
@@ -17,11 +18,11 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
   try {
-    const client = new Client({ connectionString: 'yourconnectionstring'});
+    const client = new Client({ connectionString });
     await client.connect();
-    const results = await client.query('SELECT $1::text as message', ['Hello world!']);
-    console.log(results.rows[0].message); // Hello world!
-    res.status = (200).json; ({ message: 'Posts fetched' });
+    const results = await client.query('SELECT * FROM posts');
+    console.log(results.rows);
+    res.status(200).json({ post: results.rows });
      } catch (error) {
     console.error('Error fetching posts: ', error);
     returnErrorWithMessage(res, 500, 'An error occurred fetching posts');
@@ -30,13 +31,13 @@ export const getPosts = async (req, res) => {
 export const updatePost = (req, res) => {
   const id = getResourceId(req.url);
   console.log('Here we have access to the ID: ', id);
-  res.status = (200).json;  ({ message: 'Post updated' }); 
+  res.status(200).json ({ message: 'Post updated' }); 
 };
 
 export const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const client = new Client({ connectionString: 'yourconnectionstring'});
+    const client = new Client({ connectionString});
     await client.connect();
     const queryCheckExistence = 'SELECT EXISTS(SELECT 1 FROM posts WHERE id = $1)';
     const checkExistenceResult = await client.query(queryCheckExistence, [id]);
@@ -55,7 +56,7 @@ export const deletePost = async (req, res) => {
  export const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
-    const client = new Client({ connectionString: 'yourconnectionstring'});
+    const client = new Client({ connectionString });
     await client.connect();
     const query = 'SELECT * FROM posts WHERE id = $1'; 
     const values = [id];

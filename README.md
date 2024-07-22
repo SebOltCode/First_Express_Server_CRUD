@@ -37,9 +37,9 @@ Welcome to our Fullstack Blog Project! This application is a collaborative effor
 
 ### Group Project
 This project is a collaborative effort by:
-- **SebOltCode**
-- **ArthurLiebe**
-- **Adnan**
+- **ArthurLiebe - Arthur**
+- **adnanabdalrahman - Adnan**
+- **SebOltCode - Sebastian**
 
 We followed group work guidelines throughout the development process to ensure smooth collaboration and efficient workflow.
 
@@ -138,6 +138,6 @@ This project provided us with hands-on experience in building a fullstack applic
 ---
 
 Collaborators:
-- **SebOltCode**
-- **ArthurLiebe**
-- **Adnan**
+- **ArthurLiebe - Arthur**
+- **adnanabdalrahman - Adnan**
+- **SebOltCode - Sebastian**

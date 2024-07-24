@@ -1,11 +1,10 @@
 import express from 'express';
 const server = express();
+server.use(express.json());
 const port = process.env.PORT || 3000;
 
-
-
 import { createPost, deletePost, getPosts, getPostById, updatePost } from './crudOperations.js';
-import { returnErrorWithMessage } from './utils.js';
+
 
 server.use(express.json());
 

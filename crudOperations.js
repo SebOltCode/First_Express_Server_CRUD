@@ -3,7 +3,7 @@ import pg from 'pg';
 const { Client } = pg;
 import { getResourceId, returnErrorWithMessage } from './utils.js';
 
-const connectionString = 'postgresql://fullstackdb_owner:ReM6LhxYsAF3@ep-polished-flower-a2i8tt6c.eu-central-1.aws.neon.tech/fullstackdb?sslmode=require';
+const connectionString =  process.env.PG_URI;
 
 export const createPost = async (req, res) => {
   try {
@@ -17,6 +17,8 @@ export const createPost = async (req, res) => {
 };
 
 export const getPosts = async (req, res) => {
+  console.log(connectionString);
+
   try {
     const client = new Client({ connectionString });
     await client.connect();

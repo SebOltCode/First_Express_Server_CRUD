@@ -1,23 +1,31 @@
 import express from 'express';
-const server = express();
-server.use(express.json());
+import cors from 'cors'
+
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+
 const port = process.env.PORT || 3000;
 
-import { createPost, deletePost, getPosts, getPostById, updatePost } from './crudOperations.js';
-
-
-server.use(express.json());
+import {
+  createPost,
+  deletePost,
+  getPosts,
+  getPostById,
+  updatePost
+} from './crudOperations.js';
 
 const resource = '/posts';
 
-server.get(resource, getPosts);
-server.get(`${resource}/:id`, getPostById);
-server.post(resource, createPost);
-server.put(`${resource}/:id`, updatePost);
-server.delete(`${resource}/:id`, deletePost);
-
-server.use((req, res) => {
+app.get(resource, getPosts);
+app.get(`${resource}/:id`, getPostById);
+app.post(resource, createPost);
+app.put(`${resource}/:id`, updatePost);
+app.delete(`${resource}/:id`, deletePost);
+app.use((req, res) => {
   return returnErrorWithMessage(res, 404, 'Resource Not Found');
 });
 
-server.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+app.listen(port, () => console.log(`Server running at http://localhost:${port}`));

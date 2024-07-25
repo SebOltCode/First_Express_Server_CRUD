@@ -37,7 +37,7 @@ export const getPosts = async (req, res) => {
     const client = new Client({ connectionString });
     await client.connect();
     const results = await client.query('SELECT * FROM posts');
-    res.status(200).json({ post: results.rows });
+    res.status(200).json(results.rows);
   } catch (error) {
     console.error('Error fetching posts: ', error);
     returnErrorWithMessage(res, 500, 'An error occurred fetching posts');

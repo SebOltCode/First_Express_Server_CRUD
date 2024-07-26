@@ -1,5 +1,7 @@
 # Fullstack Blog Project
 
+This project is running on render.com: https://fullstack-api-fe.onrender.com/
+
 Welcome to our Fullstack Blog Project! This application is a collaborative effort where we developed both the backend and frontend components. The project showcases a blog platform, built with the flexibility to cover various topics like travel, sports, photography, Dungeon & Dragons, or Warhammer. We used React for the frontend and a Node.js RESTful API for the backend.
 
 ## Table of Contents

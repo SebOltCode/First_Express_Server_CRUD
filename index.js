@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 
-// Set up storage with Multer
+
 const storage = multer.diskStorage({
   destination: (req, cover, cb) => {
     cb(null, path.join(__dirname, 'public/uploads'));
@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Serve static files from the public directory
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 

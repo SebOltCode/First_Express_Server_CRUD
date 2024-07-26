@@ -5,30 +5,37 @@ import { returnErrorWithMessage } from './utils.js';
 
 const connectionString = process.env.PG_URI;
 const userId = "1";
+
+
 export const createPost = async (req, res) => {
+  console.log(req.file, req.body);
   try {
     const body = req.body;
     if (!body) return returnErrorWithMessage(res, 400, 'Body is required');
+    if (!req.file.path) return returnErrorWithMessage(res, 400, 'Cover is required');
     if (!bodyValidation(body, res)) return;
+
+    const { title, content, author } = req.body;
+    const coverPath = req.file.path;
+
     const client = new Client({
       connectionString: process.env.PG_URI,
     });
     await client.connect();
     const result = await client.query(
       ' INSERT INTO posts (user_id, title, author, content, cover) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
-      [userId, body.title, body.author, body.content, body.cover]
+      [userId, title, author, content, coverPath]
     );
     await client.end();
 
-
     res.statusCode = 201;
-    res.setHeader('Content-Type', 'application/json');
     res.end(
       JSON.stringify({ message: 'Post created', result: result.rows[0] })
     );
+
   } catch (error) {
     console.error('Error in createPost:', error);
-    returnErrorWithMessage(res);
+    returnErrorWithMessage(res, 500, error.message);
   }
 };
 
@@ -90,7 +97,9 @@ export const updatePost = async (req, res) => {
     await client.connect();
 
     const checkExistenceQuery = 'SELECT EXISTS(SELECT 1 FROM posts WHERE id = $1)';
+
     const existenceResult = await client.query(checkExistenceQuery, [id]);
+
     if (!existenceResult.rows[0].exists) {
       return returnErrorWithMessage(res, 404, 'Post not found');
     }
@@ -101,6 +110,7 @@ export const updatePost = async (req, res) => {
     await client.end();
 
     res.status(200).json({ message: 'Post updated', post: updateResult.rows[0] });
+
   } catch (error) {
     console.error('Error updating post: ', error);
     returnErrorWithMessage(res, 500, 'An error occurred updating the post');
@@ -110,5 +120,6 @@ export const updatePost = async (req, res) => {
 function bodyValidation(body, res) {
   if (!body.title) return returnErrorWithMessage(res, 400, 'Title is required');
   if (!body.content) return returnErrorWithMessage(res, 400, 'Content is required');
+  if (!body.author) return returnErrorWithMessage(res, 400, 'Author is required');
   return true;
 }; 
